@@ -77,7 +77,7 @@ impl Lexer {
 
                     if encountered_string_end == false {
                         return Err(LoxError {message: "Unterminated string".to_owned(),
-                                             hint: "Maybe you forgot to close the string with a quote?".to_owned()});
+                                             hint: Some("Maybe you forgot to close the string with a quote?".to_owned())});
                     }
 
                     // println!("String: {}", string);

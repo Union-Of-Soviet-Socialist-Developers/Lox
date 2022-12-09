@@ -1,4 +1,4 @@
 pub struct LoxError {
     pub message: String,
-    pub hint: String,
+    pub hint: Option<String>,
 }

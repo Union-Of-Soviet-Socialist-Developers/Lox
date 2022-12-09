@@ -39,7 +39,10 @@ fn main() {
             println!("{:?}", tokens);
         },
         Err(e) => {
-            println!("{}\nHint: {}", e.message, e.hint);
+            println!("{}", e.message);
+            if e.hint.is_some() {
+                println!("Hint: {}", e.hint.unwrap());
+            }
         }
     }
 }
