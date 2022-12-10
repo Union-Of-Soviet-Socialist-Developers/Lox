@@ -85,24 +85,22 @@ impl Lexer {
                     tokens.push(Token {token_type: Type::STRING, value: string});
                 },
 
-                _ => {
-                    if self.get_char().is_numeric() {
-                        // Start of a number
-                        let mut number = String::new(); // Will then be converted to a number
+                c if c.is_numeric() => {
+                    // Start of a number
+                    let mut number = String::new(); // Will then be converted to a number
 
-
-                        for i in self.source[self.pos..].chars() {
-                            if !(i.is_numeric() || ".".contains(i)) { // if its not a number or decimal point we end
-                                // TODO convert 'number' (currently as str) to int or float
-                                tokens.push(Token {token_type: if number.contains(".") {Type::FLOAT} else {Type::INTEGER}, value: number});
-                                break;
-                            }
-                            number.push(i);
-                            self.pos += 1;
+                    for i in self.source[self.pos..].chars() {
+                        if !(i.is_numeric() || ".".contains(i)) { // if its not a number or decimal point we end
+                            // TODO convert 'number' (currently as str) to int or float
+                            tokens.push(Token {token_type: if number.contains(".") {Type::FLOAT} else {Type::INTEGER}, value: number});
+                            break;
                         }
+                        number.push(i);
+                        self.pos += 1;
                     }
+                },
 
-                }
+                _ => {}
             }
 
             self.next_char();
