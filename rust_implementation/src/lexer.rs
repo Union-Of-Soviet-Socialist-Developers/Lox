@@ -11,7 +11,8 @@ pub enum Type {
         LINE_BREAK,
         NEWLINE,
         STRING,
-        NUMBER,
+        INTEGER,
+        FLOAT,
         OPERATOR,
         STRING_QUOTE,
         SINGLE_LINE_COMMENT,
@@ -92,8 +93,8 @@ impl Lexer {
 
                         for i in self.source[self.pos..].chars() {
                             if !(i.is_numeric() || ".".contains(i)) { // if its not a number or decimal point we end
-                                // TODO convert 'number' (currently as str) to float
-                                tokens.push(Token {token_type: Type::NUMBER, value: number});
+                                // TODO convert 'number' (currently as str) to int or float
+                                tokens.push(Token {token_type: if number.contains(".") {Type::FLOAT} else {Type::INTEGER}, value: number});
                                 break;
                             }
                             number.push(i);

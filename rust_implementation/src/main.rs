@@ -28,6 +28,7 @@ mod errors;
 fn main() {
     let code = r#"""
         3.14
+        123
         'Hello'
         'Hello'
         'Hello'
