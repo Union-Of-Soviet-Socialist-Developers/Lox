@@ -3,22 +3,12 @@ use crate::errors::LoxError;
 use super::errors;
 
 
-#[allow(non_camel_case_types)]
-#[allow(dead_code)]
 #[derive(Debug)]
 pub enum Type {
-        WHITESPACE,
-        LINE_BREAK,
-        NEWLINE,
-        STRING,
-        INTEGER,
-        FLOAT,
-        OPERATOR,
-        STRING_QUOTE,
-        SINGLE_LINE_COMMENT,
-        MULTI_LINE_COMMENT_START,
-        MULTI_LINE_COMMENT_END,
-        UNKNOWN,
+    STRING,
+    INTEGER,
+    FLOAT,
+    OPERATOR,
 }
 
 
@@ -28,6 +18,7 @@ pub struct Token {
     pub value: String,
 }
 
+const STRING_START: &[char] = &['\'', '"', '~'];
 
 pub struct Lexer {
     source: String,
@@ -55,9 +46,9 @@ impl Lexer {
 
         while self.source.len() > self.pos {
             match self.get_char() {
-                ' ' => self.next_char(),
+                // ' ' => self.next_char(),
 
-                '\'' | '"' => {
+                c if STRING_START.contains(&c) => {
                     // Start of a string
                     let mut string = String::new();
                     let mut encountered_string_end = false;
@@ -68,7 +59,7 @@ impl Lexer {
                            immutable mutable borrow occurs here */
                         self.pos += 1;
 
-                        if ['\'', '"'].contains(&i) {
+                        if STRING_START.contains(&i) {  // Strings should end the same way it starts
                             encountered_string_end = true;
                             break;
                         } else {
