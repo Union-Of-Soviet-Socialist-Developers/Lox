@@ -25,12 +25,11 @@ fn run_file(path: &String) {
     
     match contents {
         Ok(code) => {
-            println!("{:?}", code.chars());
             let lexer_ = lexer::Lexer::new(code.to_owned());
     
             match lexer_.parse() {
                 Ok(tokens) => {
-                    println!("{:?}", tokens);
+                    println!("Tokens: {:?}", tokens);
                 },
                 Err(e) => {
                     println!("{}", e.message);

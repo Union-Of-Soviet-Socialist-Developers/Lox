@@ -3,19 +3,23 @@ use crate::errors::LoxError;
 use super::errors;
 
 
+#[allow(dead_code)]
 #[derive(Debug)]
-pub enum Type {
-    STRING,
-    INTEGER,
-    FLOAT,
-    OPERATOR,
+pub enum TokenType {
+    STRING(String),
+    INTEGER(isize),
+    FLOAT(f64),
+    ARRAY(Vec<TokenType>),
+    
+    ADD,
+    SUBTRACT,
+    DIVIDE,
 }
 
 
 #[derive(Debug)]
 pub struct Token {
-    pub token_type: Type,
-    pub value: String,
+    pub value: TokenType,
 }
 
 const STRING_START: &[char] = &['\'', '"', '~'];
@@ -72,18 +76,20 @@ impl Lexer {
                                              hint: Some("Maybe you forgot to close the string with a quote?".to_owned())});
                     }
 
-                    // println!("String: {}", string);
-                    tokens.push(Token {token_type: Type::STRING, value: string});
+                    tokens.push(Token {value: TokenType::STRING(string)});
                 },
 
                 c if c.is_numeric() => {
                     // Start of a number
-                    let mut number = String::new(); // Will then be converted to a number
+                    let mut number = String::new();
 
                     for i in self.source[self.pos..].chars() {
-                        if !(i.is_numeric() || ".".contains(i)) { // if its not a number or decimal point we end
-                            // TODO convert 'number' (currently as str) to int or float
-                            tokens.push(Token {token_type: if number.contains(".") {Type::FLOAT} else {Type::INTEGER}, value: number});
+                        if !(i.is_numeric() || ".".contains(i)) { // If its not a number or decimal point we end
+                            if number.contains(".") {
+                                tokens.push(Token {value: TokenType::FLOAT(number.parse::<f64>().unwrap())});
+                            } else {
+                                tokens.push(Token {value: TokenType::INTEGER(number.parse::<isize>().unwrap())});
+                            }
                             break;
                         }
                         number.push(i);
